@@ -1,0 +1,202 @@
+//show all databases
+show dbs 
+
+//show collections
+show collections
+
+// create database or switch db
+use db_name 	create/use
+
+//create collection or switch collection
+db.collection_name 	create/use
+
+//insert single doc in collection
+db.collection_name.insertOne({...data})
+
+//print all existing doc in collection
+db.colleciion_name.find()
+
+//update by querying if exist will update else create new
+db.student.updateOne({name : "lufy"},{$set:{idcard : {hasPanCard:false, hasAadhaarCard : false}}})
+
+//find one 
+db.student.findOne({})
+
+#16mb/doc and 100 level nesting is posible in mongo db
+
+//update many {} is for all 
+db.students.updateMany({},{$set:{hobbies : ['anime','cooking']})
+
+//find
+db.sutuents.find({hobbies:'cooking'})
+
+//find nested data 
+db.students.find({'idCards.hasPanCard':true})
+
+//create document
+inserOne(data, options)
+inserMany(data, options)
+
+//read doc
+find(filter, options)
+findOne(filter,options)
+
+//update doc
+udateOne(filter,data, options)
+updateMany(filter,data,options)
+replaceOne(filter,data,options)
+
+//delete doc
+deleteOne(filter options)
+deleteMany(filter ,options)
+
+//find vs findOne
+#find
+// find gives all matching data in list [] even if its a single element. if not match return null
+
+#findOne
+// findOne gives only first matching data in {} if not match return cursor we can use mehtods on cursor and loops like count() , limit(), toArray()
+
+//find with conditions lt, lte, gt,gte
+db.students.find(age : {$lt:12})
+db.stuedents.find(age:{$gte :12, $lte:30})
+
+//insertOne and insertMany
+db.students.insertOne({name:"nami",age:23})
+db.students.insertMany([{name:"lufy"},{name:"zoro"}])
+
+//udateOne and UpdateMany
+//$set is keyword of update
+db.students.updateOne({name : "zoro"},{$set:{age:22}})
+db.students.updateMany({age: {$gt:22} },{ $set:{ eligibleToMarry:true }} )
+
+//only selected field will be prsetnt
+db.students.find({},{name:1,_id:0})
+
+//is mongo schemaless?
+yes
+
+//data type in mongodb
+typeof db.students.findOne().age
+
+// drop / delete db
+db.dropdatabase()
+
+//drop/delete collection
+db.collection_name.drop()
+
+//options in insertMany
+// date insertion fails bad doc by adding option below will thorough err but other err free will be inserted
+db.book.insertMany([{...data},{...data}],{ordered:false})
+
+//create collection with validator
+//it uses jsonSchema for validation
+db.createCollection("nonfiction",{
+    validator:{
+        $jsonSchema:{
+            properties:{
+                name:{
+                    bsonType:'string',
+                    description:'must be a string and required'
+                },
+                price:{
+                    bsonType:'number',
+                    description:'must be a number and required'
+                }
+            }
+        }
+    }
+})
+
+//can we modify the validation schema ? so its yes !!
+//where collMod is colleciton modification
+db.runCommand({
+    collMod:{
+        validator:{
+            $jsonSchema:{
+                properties:{
+                    name:{
+                        bsonType:'string',
+                        description:'must be a string and required'
+                    },
+                    price:{
+                        bsonType:'number',
+                        description:'must be a number and required'
+                    }
+                },
+                required : ['name','price']
+            }
+        }
+    }
+})
+
+//write concern
+{ w: <value>, j: <boolean>, wtimeout: <number> }
+db.book.insertOne({name:'book',price : 40},{writeConcern:{w:0,j:1,wtimeout:10ms}
+
+//atomicity
+atomicity is achieved at doc level
+ya to hoga ya to nhai hoga but never adha adhura :)
+
+//mongo import
+need to install mongodb tool
+for creating collection form json file
+
+//comparision operator
+$eq : 5
+$ne : 5
+$gt
+$gte
+$lt
+$lte
+$in : [2,3]
+$nin : [3]
+
+//logical operator
+
+$not
+$and		//$or[{},{}]
+$or		//$or[{},{}]
+$nor		//$nor[{},{}]
+
+//element query operator
+$exists
+$type
+db.students.find({hasmacbook:{$exists:true,$type:'bool'}})
+
+//expression
+$regex 
+$text //it will work only after creating index of that field then {$text:{$search:'your str'}}
+$mod  // modulus operator
+
+
+//indexing
+db.students.createIndex({bio:'text'})
+
+$all
+$size
+$eleMatch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
