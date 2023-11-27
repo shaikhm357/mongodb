@@ -176,6 +176,62 @@ db.students.createIndex({bio:'text'})
 $all
 $size
 $eleMatch
+$inc
+db.students.updateMany({},{$inc:{age: 2}})
+$min	
+$max
+$unset  // remove key value pair
+$rename
+
+// array updation
+db.students.find({experience:{$elemMatch:{position:'Intern'}}})
+// add new field
+db.students.updateMany(
+  {
+    experience: { $elemMatch: { position: "Intern" } }
+  },
+  {
+    $set: { 'experience.$[].neglect': 0 }
+  }
+);
+
+//push will add 
+db.students.updateOne({name:"Sophia Miller"},{$push : {experience :  {organization: 'Infosys',position: 'Dev',duration: 'Summer 2012'} } } )
+
+//addToSet won't add if exists
+db.students.updateOne({name:"Sophia Miller"},{$addToSet : {experience :  {organization: 'Infosys',position: 'Dev',duration: 'Summer 2012'} } } )
+
+// pull will remove matched one
+db.students.updateOne({name:"Sophia Miller"},{$pull : {experience :  {organization: 'Infosys',position: 'Dev',duration: 'Summer 2012'} } } )
+
+//aggregate
+school> db.students.aggregate([{$unwind:'$hobbies'},  {$group:{_id: "$studentAge",hobbies:{$push :"$hobbies"} }}  ])
+add sort
+school> db.students.aggregate([{$unwind:'$hobbies'},  {$group:{_id: "$studentAge",hobbies:{$push :"$hobbies"} }},{$sort:{_id:1}}  ])
+//add more fields
+school> db.students.aggregate([{$unwind:'$hobbies'},  {$group:{_id: "$studentAge",hobbies:{$push :"$hobbies"},identities:{$addToSet:'$identity'} }},{$sort:{_id:1}}  ])
+//get data in single doc
+school> db.students.aggregate([{$unwind:"$hobbies"},{$group:{_id:null, hobbies:{$addToSet:'$hobbies'} }}])
+
+//indexing
+collScan - slow
+IXSCAN - is fast
+
+//get existing index
+school> db.students.getIndexes()
+
+//create index
+school> db.students.createIndex({studentAge:1})
+
+//drop index
+db.students.dropIndex("studentAge_1")
+
+
+
+
+
+
+
 
 
 
